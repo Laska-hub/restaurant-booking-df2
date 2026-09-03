@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}О ресторане{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-md-5">
+
+                    <h1 class="mb-4 text-center">
+                        О нашем ресторане
+                    </h1>
+
+                    <p class="lead">
+                        Добро пожаловать в наш ресторан —
+                        место, где можно вкусно поесть,
+                        отдохнуть и провести время с близкими.
+                    </p>
+
+                    <p>
+                        Мы создаём уютную атмосферу и предлагаем
+                        гостям блюда из свежих продуктов.
+                        Наша команда старается сделать каждый
+                        визит приятным и комфортным.
+                    </p>
+
+                    <hr class="my-4">
+
+                    <h2 class="h4 mb-3">
+                        Наши преимущества
+                    </h2>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h3 class="h5">
+                                Авторская кухня
+                            </h3>
+                            <p class="text-muted">
+                                Разнообразное меню и блюда,
+                                приготовленные с вниманием к деталям.
+                            </p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <h3 class="h5">
+                                Уютная атмосфера
+                            </h3>
+                            <p class="text-muted">
+                                Комфортное пространство для встреч,
+                                семейных ужинов и особых случаев.
+                            </p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <h3 class="h5">
+                                Удобное бронирование
+                            </h3>
+                            <p class="text-muted">
+                                Забронировать столик можно онлайн
+                                в несколько простых шагов.
+                            </p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <h3 class="h5">
+                                Забота о гостях
+                            </h3>
+                            <p class="text-muted">
+                                Мы стремимся сделать посещение
+                                ресторана комфортным для каждого гостя.
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="text-center mt-4">
+                            <a
+                                href="{% url 'restaurant:booking' %}"
+                                class="btn btn-primary"
+                            >
+                                Забронировать столик
+                            </a>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

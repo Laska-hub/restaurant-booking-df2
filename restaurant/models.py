@@ -1,11 +1,21 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 
 
 class Table(models.Model):
-    number = models.PositiveIntegerField(unique=True, verbose_name="Номер столика")
-    seats = models.PositiveIntegerField(verbose_name="Количество мест")
-    is_active = models.BooleanField(default=True, verbose_name="Доступен")
+    number = models.PositiveIntegerField(
+        unique=True,
+        verbose_name="Номер столика",
+    )
+    seats = models.PositiveIntegerField(
+        verbose_name="Количество мест",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Доступен",
+    )
 
     class Meta:
         ordering = ["number"]
@@ -37,20 +47,42 @@ class Booking(models.Model):
     )
     date = models.DateField(verbose_name="Дата")
     time = models.TimeField(verbose_name="Время")
-    guests = models.PositiveIntegerField(verbose_name="Количество гостей")
+    guests = models.PositiveIntegerField(
+        verbose_name="Количество гостей",
+    )
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="pending",
         verbose_name="Статус",
     )
-    comment = models.TextField(blank=True, verbose_name="Комментарий")
+    comment = models.TextField(
+        blank=True,
+        verbose_name="Комментарий",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-date", "-time"]
         verbose_name = "Бронирование"
         verbose_name_plural = "Бронирования"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["table", "date", "time"],
+                condition=Q(status__in=["pending", "confirmed"]),
+                name="unique_active_table_booking",
+            ),
+        ]
+
+    def clean(self):
+        if self.table_id:
+            if not self.table.is_active:
+                raise ValidationError("Этот столик сейчас недоступен для бронирования.")
+
+            if self.guests > self.table.seats:
+                raise ValidationError(
+                    f"Столик рассчитан максимум на " f"{self.table.seats} гостей."
+                )
 
     def __str__(self):
         return (

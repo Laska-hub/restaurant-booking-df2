@@ -30,4 +30,3 @@ class BookingAdmin(admin.ModelAdmin):
     )
     ordering = ("-date", "-time")
     list_select_related = ("user", "table")
-
