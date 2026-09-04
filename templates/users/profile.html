@@ -89,6 +89,7 @@
                         {% for booking in bookings %}
                             <div class="card mb-3">
                                 <div class="card-body">
+
                                     <p class="mb-1">
                                         <strong>Дата:</strong>
                                         {{ booking.date }}
@@ -115,20 +116,31 @@
                                     </p>
 
                                     {% if booking.status == "pending" or booking.status == "confirmed" %}
-                                        <form
-                                            method="post"
-                                            action="{% url 'restaurant:booking_cancel' booking.id %}"
-                                            class="mt-3"
-                                        >
-                                            {% csrf_token %}
-                                            <button
-                                                type="submit"
-                                                class="btn btn-outline-danger"
+                                        <div class="d-flex gap-2 mt-3">
+
+                                            <a
+                                                href="{% url 'restaurant:booking_edit' booking.id %}"
+                                                class="btn btn-outline-secondary"
                                             >
-                                                Отменить бронирование
-                                            </button>
-                                        </form>
+                                                Изменить
+                                            </a>
+
+                                            <form
+                                                method="post"
+                                                action="{% url 'restaurant:booking_cancel' booking.id %}"
+                                            >
+                                                {% csrf_token %}
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-outline-danger"
+                                                >
+                                                    Отменить бронирование
+                                                </button>
+                                            </form>
+
+                                        </div>
                                     {% endif %}
+
                                 </div>
                             </div>
                         {% endfor %}

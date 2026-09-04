@@ -89,3 +89,89 @@ class Booking(models.Model):
             f"{self.date} {self.time} — "
             f"столик №{self.table.number} — {self.user.email}"
         )
+
+
+class Feedback(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Имя",
+    )
+    email = models.EmailField(
+        verbose_name="Email",
+    )
+    message = models.TextField(
+        verbose_name="Сообщение",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Обратная связь"
+        verbose_name_plural = "Обратная связь"
+
+    def __str__(self):
+        return f"{self.name} — {self.email}"
+
+
+class SiteContent(models.Model):
+    restaurant_description = models.TextField(
+        verbose_name="Описание ресторана",
+    )
+    history = models.TextField(
+        verbose_name="История ресторана",
+    )
+    mission = models.TextField(
+        verbose_name="Миссия ресторана",
+    )
+    team = models.TextField(
+        verbose_name="Команда",
+    )
+    hero_image = models.ImageField(
+        upload_to="site/",
+        blank=True,
+        null=True,
+        verbose_name="Главное изображение",
+    )
+
+    class Meta:
+        verbose_name = "Контент сайта"
+        verbose_name_plural = "Контент сайта"
+
+    def __str__(self):
+        return "Контент сайта"
+
+
+class RestaurantImage(models.Model):
+    CATEGORY_CHOICES = [
+        ("restaurant", "Ресторан"),
+        ("team", "Команда"),
+        ("menu", "Меню"),
+    ]
+
+    title = models.CharField(
+        max_length=100,
+        verbose_name="Название",
+    )
+    image = models.ImageField(
+        upload_to="restaurant/",
+        verbose_name="Изображение",
+    )
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        verbose_name="Раздел",
+    )
+    description = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Описание",
+    )
+
+    class Meta:
+        verbose_name = "Изображение ресторана"
+        verbose_name_plural = "Изображения ресторана"
+
+    def __str__(self):
+        return self.title

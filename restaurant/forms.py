@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from .models import Table
 
 # дата + время + гости → форма проверяет наличие →
-# view выбирает подходящий столик → создаёт Booking.
+# view выбирает подходящий столик → создаёт или изменяет Booking.
 
 
 class BookingForm(forms.Form):
@@ -55,8 +55,10 @@ class BookingForm(forms.Form):
         ),
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, booking=None, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.booking = booking
 
         self.fields["time"].choices = [
             (
@@ -96,6 +98,13 @@ class BookingForm(forms.Form):
             bookings__status__in=["pending", "confirmed"],
         )
 
+        if self.booking:
+            available_tables = available_tables | Table.objects.filter(
+                id=self.booking.table_id,
+                is_active=True,
+                seats__gte=guests,
+            )
+
         if not available_tables.exists():
             raise ValidationError(
                 "На выбранные дату и время нет свободного столика "
@@ -103,3 +112,37 @@ class BookingForm(forms.Form):
             )
 
         return cleaned_data
+
+
+class FeedbackForm(forms.Form):
+    name = forms.CharField(
+        label="Имя",
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Ваше имя",
+            }
+        ),
+    )
+
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Ваш email",
+            }
+        ),
+    )
+
+    message = forms.CharField(
+        label="Сообщение",
+        widget=forms.Textarea(
+            attrs={
+                "rows": 4,
+                "class": "form-control",
+                "placeholder": "Ваше сообщение",
+            }
+        ),
+    )

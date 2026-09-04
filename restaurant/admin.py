@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from .models import Booking, Table
+from .models import (
+    Booking,
+    Feedback,
+    RestaurantImage,
+    SiteContent,
+    Table,
+)
 
 
 @admin.register(Table)
@@ -30,3 +36,42 @@ class BookingAdmin(admin.ModelAdmin):
     )
     ordering = ("-date", "-time")
     list_select_related = ("user", "table")
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "email",
+        "created_at",
+    )
+    search_fields = (
+        "name",
+        "email",
+        "message",
+    )
+    ordering = ("-created_at",)
+
+
+@admin.register(SiteContent)
+class SiteContentAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "restaurant_description",
+        "history",
+        "mission",
+    )
+
+
+@admin.register(RestaurantImage)
+class RestaurantImageAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "category",
+        "description",
+    )
+    list_filter = ("category",)
+    search_fields = (
+        "title",
+        "description",
+    )

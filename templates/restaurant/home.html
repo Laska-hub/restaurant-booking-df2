@@ -1,70 +1,371 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Ресторан{% endblock %}
+{% block title %}Атмосфера{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row align-items-center">
 
-        <div class="col-lg-7">
-            <h1 class="display-4 fw-bold mb-4">
-                Добро пожаловать в наш ресторан
-            </h1>
+<!-- Главный экран -->
+<section
+    class="hero-section"
+    style="width: 100%;"
+>
+    <div
+        class="hero-row"
+        style="
+            display: flex !important;
+            flex-direction: row !important;
+            width: 100% !important;
+            min-height: 600px;
+            align-items: center;
+        "
+    >
 
-            <p class="lead mb-4">
-                Уютная атмосфера, вкусная кухня и приятные вечера.
-                Забронируйте столик заранее и наслаждайтесь отдыхом.
+        <!-- Фото -->
+        <div class="hero-photo">
+            <img
+                src="{% static 'images/restaurant.jpeg' %}"
+                alt="Интерьер ресторана «Атмосфера»"
+            >
+        </div>
+
+        <!-- Текст -->
+        <div
+            class="hero-content"
+            style="
+                padding-left: 140px;
+            "
+        >
+            <p class="text-uppercase mb-3">
+                ДОБРО ПОЖАЛОВАТЬ
             </p>
 
-            {% if user.is_authenticated %}
-                <a
-                    href="{% url 'restaurant:booking' %}"
-                    class="btn btn-primary btn-lg"
-                >
-                    Забронировать столик
-                </a>
-            {% else %}
-                <a
-                    href="{% url 'users:login' %}"
-                    class="btn btn-primary btn-lg me-2"
-                >
-                    Войти и забронировать
-                </a>
+            <h2 class="mb-4">
+                Место для приятных встреч
+            </h2>
 
-                <a
-                    href="{% url 'users:register' %}"
-                    class="btn btn-outline-secondary btn-lg"
-                >
-                    Регистрация
-                </a>
+            <p class="lead mb-3">
+    {{ content.restaurant_description }}
+</p>
+
+            {% if user.is_authenticated %}
+                <div class="mt-3">
+                    <a
+                        href="{% url 'restaurant:booking' %}"
+                        class="btn btn-primary btn-lg me-2"
+                    >
+                        Забронировать столик
+                    </a>
+
+                    <a
+                        href="{% url 'restaurant:menu' %}"
+                        class="btn btn-outline-secondary btn-lg"
+                    >
+                        Меню
+                    </a>
+                </div>
+            {% else %}
+                <div class="mt-3">
+                    <a
+                        href="{% url 'users:login' %}"
+                        class="btn btn-primary btn-lg me-2"
+                    >
+                        Войти и забронировать
+                    </a>
+
+                    <a
+                        href="{% url 'users:register' %}"
+                        class="btn btn-outline-secondary btn-lg me-2"
+                    >
+                        Регистрация
+                    </a>
+
+                    <a
+                        href="{% url 'restaurant:menu' %}"
+                        class="btn btn-outline-secondary btn-lg"
+                    >
+                        Меню
+                    </a>
+                </div>
             {% endif %}
         </div>
 
-        <div class="col-lg-5 mt-4 mt-lg-0">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h2 class="h4 mb-3">
-                        Почему выбирают нас
-                    </h2>
+    </div>
+</section>
 
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            🍽️ Авторская кухня
-                        </li>
-                        <li class="list-group-item">
-                            🕯️ Уютная атмосфера
-                        </li>
-                        <li class="list-group-item">
-                            🪑 Удобные столики
-                        </li>
-                        <li class="list-group-item">
-                            📅 Простое онлайн-бронирование
-                        </li>
-                    </ul>
+
+<!-- Услуги -->
+<section class="container pt-3 pb-5">
+    <h2 class="text-center mb-5">
+        Наши услуги
+    </h2>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body p-4 text-center">
+
+                    <div class="fs-1 mb-3">
+                        🍽️
+                    </div>
+
+                    <h3 class="h5 mb-3">
+                        Ресторанная кухня
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Разнообразное меню с блюдами
+                        для приятного обеда или ужина.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body p-4 text-center">
+
+                    <div class="fs-1 mb-3">
+                        🪑
+                    </div>
+
+                    <h3 class="h5 mb-3">
+                        Уютные столики
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Комфортное пространство для встреч
+                        с друзьями, семьёй и близкими.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body p-4 text-center">
+
+                    <div class="fs-1 mb-3">
+                        📅
+                    </div>
+
+                    <h3 class="h5 mb-3">
+                        Онлайн-бронирование
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Забронируйте столик заранее
+                        в несколько простых шагов.
+                    </p>
+
                 </div>
             </div>
         </div>
 
     </div>
-</div>
+</section>
+
+
+<!-- Почему выбирают нас -->
+<section class="container pb-5">
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4 p-md-5">
+
+            <h2 class="text-center mb-5">
+                Почему выбирают нас
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <h3 class="h5">
+                        Авторская кухня
+                    </h3>
+
+                    <p class="text-muted">
+                        Разнообразное меню и блюда,
+                        приготовленные с вниманием к деталям.
+                    </p>
+                </div>
+
+
+                <div class="col-md-6">
+                    <h3 class="h5">
+                        Уютная атмосфера
+                    </h3>
+
+                    <p class="text-muted">
+                        Комфортное пространство для встреч,
+                        семейных ужинов и особых случаев.
+                    </p>
+                </div>
+
+
+                <div class="col-md-6">
+                    <h3 class="h5">
+                        Удобное бронирование
+                    </h3>
+
+                    <p class="text-muted">
+                        Забронировать столик можно онлайн
+                        в несколько простых шагов.
+                    </p>
+                </div>
+
+
+                <div class="col-md-6">
+                    <h3 class="h5">
+                        Забота о гостях
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Мы стремимся сделать посещение
+                        ресторана комфортным для каждого гостя.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+<!-- Призыв к бронированию -->
+<section class="container pb-5">
+    <div class="text-center">
+
+        <h2 class="mb-3">
+            Проведите вечер в «Атмосфере»
+        </h2>
+
+        <p class="lead mb-4">
+            Выберите удобную дату и забронируйте столик.
+        </p>
+
+        {% if user.is_authenticated %}
+            <a
+                href="{% url 'restaurant:booking' %}"
+                class="btn btn-primary btn-lg"
+            >
+                Забронировать столик
+            </a>
+        {% else %}
+            <a
+                href="{% url 'users:login' %}"
+                class="btn btn-primary btn-lg"
+            >
+                Войти и забронировать
+            </a>
+        {% endif %}
+
+    </div>
+</section>
+
+
+<!-- Контакты -->
+<section class="container pb-5">
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4 p-md-5">
+
+            <h2 class="text-center mb-5">
+                Контакты
+            </h2>
+
+            <div class="row g-4 text-center">
+
+                <div class="col-md-4">
+                    <h3 class="h5 mb-3">
+                        Адрес
+                    </h3>
+                    <p class="text-muted mb-0">
+                        Санкт-Петербург, Невский проспект, 25
+                    </p>
+                </div>
+
+                <div class="col-md-4">
+                    <h3 class="h5 mb-3">
+                        Телефон
+                    </h3>
+                    <p class="text-muted mb-0">
+                        +7 (812) 123-45-67
+                    </p>
+                </div>
+
+                <div class="col-md-4">
+                    <h3 class="h5 mb-3">
+                        Время работы
+                    </h3>
+                    <p class="text-muted mb-0">
+                        Ежедневно: 12:00–23:00
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+<!-- Обратная связь -->
+<section class="container pb-5">
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4 p-md-5">
+
+            <h2 class="text-center mb-3">
+                Обратная связь
+            </h2>
+
+            <p class="text-center text-muted mb-4">
+                Оставьте сообщение, и мы обязательно свяжемся с вами.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        {{ form.name.label_tag }}
+                        {{ form.name }}
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form.message.label_tag }}
+                        {{ form.message }}
+                    </div>
+
+                    <div class="col-12 text-center mt-4">
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg"
+                        >
+                            Отправить сообщение
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</section>
+
 {% endblock %}
