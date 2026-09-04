@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Бронирование столика{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="mb-4 text-center">
+                        Забронировать столик
+                    </h1>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            {{ form.date.label_tag }}
+                            {{ form.date }}
+
+                            {% if form.date.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.date.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.time.label_tag }}
+                            {{ form.time }}
+
+                            {% if form.time.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.time.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.guests.label_tag }}
+                            {{ form.guests }}
+
+                            {% if form.guests.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.guests.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form.comment.label_tag }}
+                            {{ form.comment }}
+
+                            {% if form.comment.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.comment.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+                            Забронировать
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

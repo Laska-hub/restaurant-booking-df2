@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+
+                    <h1 class="mb-4">
+                        Личный кабинет
+                    </h1>
+
+                    <p>
+                        Добро пожаловать,
+                        <strong>{{ user.username }}</strong>!
+                    </p>
+
+                    <hr>
+
+                    <h2 class="h4 mb-3">
+                        Редактирование профиля
+                    </h2>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            {{ form.first_name.label_tag }}
+                            {{ form.first_name }}
+
+                            {% if form.first_name.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.first_name.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.last_name.label_tag }}
+                            {{ form.last_name }}
+
+                            {% if form.last_name.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.last_name.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+
+                            {% if form.email.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.email.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Сохранить изменения
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <h2 class="h4 mb-3">
+                        Мои бронирования
+                    </h2>
+
+                    {% if bookings %}
+                        {% for booking in bookings %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+
+                                    <p class="mb-1">
+                                        <strong>Дата:</strong>
+                                        {{ booking.date }}
+                                    </p>
+
+                                    <p class="mb-1">
+                                        <strong>Время:</strong>
+                                        {{ booking.time|time:"H:i" }}
+                                    </p>
+
+                                    <p class="mb-1">
+                                        <strong>Столик:</strong>
+                                        №{{ booking.table.number }}
+                                    </p>
+
+                                    <p class="mb-1">
+                                        <strong>Гостей:</strong>
+                                        {{ booking.guests }}
+                                    </p>
+
+                                    <p class="mb-0">
+                                        <strong>Статус:</strong>
+                                        {{ booking.get_status_display }}
+                                    </p>
+
+                                    {% if booking.status == "pending" or booking.status == "confirmed" %}
+                                        <div class="d-flex gap-2 mt-3">
+
+                                            <a
+                                                href="{% url 'restaurant:booking_edit' booking.id %}"
+                                                class="btn btn-outline-secondary"
+                                            >
+                                                Изменить
+                                            </a>
+
+                                            <form
+                                                method="post"
+                                                action="{% url 'restaurant:booking_cancel' booking.id %}"
+                                            >
+                                                {% csrf_token %}
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-outline-danger"
+                                                >
+                                                    Отменить бронирование
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">
+                            У вас пока нет бронирований.
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
