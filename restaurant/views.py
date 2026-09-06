@@ -8,24 +8,20 @@ from .models import (
     Feedback,
     RestaurantImage,
     SiteContent,
-    Table,
 )
-
-# BookingForm получает дату, время, количество гостей и комментарий.
-# Форма через Django ORM проверяет, что подходящий столик существует.
-# view снова получает свободные столики.
-# .order_by("seats").first() выбирает самый маленький подходящий столик
-# — например, для 2 гостей сначала
-# возьмём столик на 2 места, а не на 8.
-# Booking.objects.create() создаёт настоящее бронирование с конкретным table.
-# После успешного бронирования пользователь отправляется в личный кабинет.
-
-# @login_required означает, что неавторизованный пользователь
-# не сможет создать бронирование. Это как раз демонстрирует критерий Permissions/Auth.
+from .services import get_available_table
 
 
 @login_required
 def booking_create_view(request):
+    """
+    Создаёт новое бронирование столика.
+
+    Доступна только авторизованным пользователям.
+    Форма проверяет данные и наличие подходящего столика,
+    после чего создаётся объект Booking и пользователь
+    перенаправляется в личный кабинет.
+    """
     if request.method == "POST":
         form = BookingForm(request.POST)
 
@@ -34,18 +30,10 @@ def booking_create_view(request):
             booking_time = form.cleaned_data["time"]
             guests = form.cleaned_data["guests"]
 
-            available_table = (
-                Table.objects.filter(
-                    is_active=True,
-                    seats__gte=guests,
-                )
-                .exclude(
-                    bookings__date=booking_date,
-                    bookings__time=booking_time,
-                    bookings__status__in=["pending", "confirmed"],
-                )
-                .order_by("seats")
-                .first()
+            available_table = get_available_table(
+                booking_date,
+                booking_time,
+                guests,
             )
 
             if available_table:
@@ -79,6 +67,13 @@ def booking_create_view(request):
 
 @login_required
 def booking_edit_view(request, booking_id):
+    """
+    Редактирует существующее бронирование пользователя.
+
+    Пользователь может изменить дату, время, количество гостей
+    и комментарий. При изменении также выполняется поиск
+    подходящего свободного столика.
+    """
     booking = get_object_or_404(
         Booking,
         id=booking_id,
@@ -99,22 +94,12 @@ def booking_edit_view(request, booking_id):
             booking_time = form.cleaned_data["time"]
             guests = form.cleaned_data["guests"]
 
-            available_table = (
-                Table.objects.filter(
-                    is_active=True,
-                    seats__gte=guests,
-                )
-                .exclude(
-                    bookings__date=booking_date,
-                    bookings__time=booking_time,
-                    bookings__status__in=["pending", "confirmed"],
-                )
-                .order_by("seats")
-                .first()
+            available_table = get_available_table(
+                booking_date,
+                booking_time,
+                guests,
+                booking=booking,
             )
-
-            if available_table is None:
-                available_table = booking.table
 
             booking.date = booking_date
             booking.time = booking_time
@@ -154,6 +139,12 @@ def booking_edit_view(request, booking_id):
 
 @login_required
 def booking_cancel_view(request, booking_id):
+    """
+    Отменяет бронирование пользователя.
+
+    Отмена выполняется только для активных бронирований
+    со статусом pending или confirmed.
+    """
     booking = get_object_or_404(
         Booking,
         id=booking_id,
@@ -171,6 +162,12 @@ def booking_cancel_view(request, booking_id):
 
 
 def home_view(request):
+    """
+    Отображает главную страницу ресторана.
+
+    Получает контент сайта из базы данных и обрабатывает
+    отправку формы обратной связи.
+    """
     content = SiteContent.objects.first()
 
     if request.method == "POST":
@@ -198,6 +195,12 @@ def home_view(request):
 
 
 def about_view(request):
+    """
+    Отображает страницу «О ресторане».
+
+    Получает историю, миссию, ценности и информацию
+    о команде из базы данных.
+    """
     content = SiteContent.objects.first()
 
     return render(
@@ -208,6 +211,12 @@ def about_view(request):
 
 
 def menu_view(request):
+    """
+    Отображает страницу меню ресторана.
+
+    Получает из базы данных изображения, относящиеся
+    к категории меню.
+    """
     images = RestaurantImage.objects.filter(category="menu")
 
     return render(

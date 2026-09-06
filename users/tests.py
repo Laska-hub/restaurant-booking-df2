@@ -4,21 +4,10 @@ from django.urls import reverse
 
 User = get_user_model()
 
-# 9 тестов проверяют:
-# регистрация;
-# уникальность email при регистрации;
-# успешный вход;
-# неправильный пароль;
-# доступ к профилю авторизованного пользователя;
-# защита профиля от неавторизованных;
-# выход;
-# редактирование профиля;
-# защита уникальности email при редактировании.
-
 
 class UserRegistrationTest(TestCase):
-    # Проверяем, что новый пользователь может успешно зарегистрироваться.
     def test_user_can_register(self):
+        """Проверяет, что новый пользователь может успешно зарегистрироваться."""
         url = reverse("users:register")
 
         response = self.client.post(
@@ -39,9 +28,11 @@ class UserRegistrationTest(TestCase):
             ).exists()
         )
 
-    # Проверяем, что нельзя зарегистрировать двух пользователей
-    # с одинаковым email.
     def test_user_cannot_register_with_existing_email(self):
+        """
+        Проверяет, что нельзя зарегистрировать двух пользователей
+        с одинаковым email.
+        """
         User.objects.create_user(
             username="existinguser",
             email="existing@example.com",
@@ -63,9 +54,11 @@ class UserRegistrationTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.count(), 1)
 
-    # Проверяем, что зарегистрированный пользователь
-    # может успешно войти в аккаунт.
     def test_user_can_login(self):
+        """
+        Проверяет, что зарегистрированный пользователь
+        может успешно войти в аккаунт.
+        """
         User.objects.create_user(
             username="loginuser",
             email="login@example.com",
@@ -85,9 +78,11 @@ class UserRegistrationTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
-    # Проверяем, что пользователь не может войти
-    # с неправильным паролем.
     def test_user_cannot_login_with_wrong_password(self):
+        """
+        Проверяет, что пользователь не может войти
+        с неправильным паролем.
+        """
         User.objects.create_user(
             username="loginuser",
             email="login@example.com",
@@ -107,9 +102,11 @@ class UserRegistrationTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
-    # Проверяем, что авторизованный пользователь
-    # может открыть свой профиль.
     def test_authenticated_user_can_open_profile(self):
+        """
+        Проверяет, что авторизованный пользователь
+        может открыть свой профиль.
+        """
         user = User.objects.create_user(
             username="profileuser",
             email="profile@example.com",
@@ -124,9 +121,11 @@ class UserRegistrationTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    # Проверяем, что неавторизованный пользователь
-    # не может открыть профиль.
     def test_anonymous_user_cannot_open_profile(self):
+        """
+        Проверяет, что неавторизованный пользователь
+        не может открыть профиль.
+        """
         url = reverse("users:profile")
 
         response = self.client.get(url)
@@ -134,8 +133,8 @@ class UserRegistrationTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/users/login/", response.url)
 
-    # Проверяем, что пользователь может выйти из аккаунта.
     def test_user_can_logout(self):
+        """Проверяет, что пользователь может выйти из аккаунта."""
         user = User.objects.create_user(
             username="logoutuser",
             email="logout@example.com",
@@ -151,9 +150,11 @@ class UserRegistrationTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
-    # Проверяем, что авторизованный пользователь
-    # может изменить данные своего профиля.
     def test_user_can_update_profile(self):
+        """
+        Проверяет, что авторизованный пользователь
+        может изменить данные своего профиля.
+        """
         user = User.objects.create_user(
             username="profileuser",
             email="old@example.com",
@@ -181,9 +182,11 @@ class UserRegistrationTest(TestCase):
         self.assertEqual(user.last_name, "Иванов")
         self.assertEqual(user.email, "new@example.com")
 
-    # Проверяем, что пользователь не может изменить email
-    # на email, который уже принадлежит другому пользователю.
     def test_user_cannot_update_profile_with_existing_email(self):
+        """
+        Проверяет, что пользователь не может изменить email
+        на email другого пользователя.
+        """
         User.objects.create_user(
             username="existinguser",
             email="existing@example.com",

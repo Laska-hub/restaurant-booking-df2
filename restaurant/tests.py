@@ -11,26 +11,6 @@ from .models import Booking, Table
 User = get_user_model()
 
 
-# Проверяем 12 тестов:
-# 1. Корректное количество гостей.
-# 2. Нельзя забронировать столик на большее количество гостей,
-#    чем предусмотрено мест.
-# 3. Нельзя забронировать неактивный столик.
-# 4. Нельзя создать два активных бронирования одного столика
-#    на одну дату и время.
-# 5. Отменённое бронирование не блокирует столик.
-# 6. Ограничение UniqueConstraint на уровне базы данных
-#    предотвращает дублирование активных бронирований.
-# 7. Пользователь не может отменить бронирование другого пользователя.
-# 8. Неавторизованный пользователь не может открыть страницу
-#    бронирования.
-# 9. Авторизованный пользователь может открыть страницу
-#    бронирования.
-# 10. Авторизованный пользователь может создать бронирование.
-# 11. Нельзя создать бронирование, если нет подходящего столика.
-# 12. Нельзя создать бронирование на прошедшую дату.
-
-
 class BookingModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -51,18 +31,19 @@ class BookingModelTest(TestCase):
             "guests": 2,
         }
 
-    # Проверяем, что бронирование с допустимым количеством гостей
-    # успешно проходит валидацию.
     def test_booking_with_valid_guest_count(self):
+        """Проверяет бронирование с допустимым количеством гостей."""
         booking = Booking(**self.booking_data)
 
         booking.full_clean()
 
         self.assertEqual(booking.guests, 2)
 
-    # Проверяем, что нельзя забронировать столик на количество гостей,
-    # превышающее количество доступных мест.
     def test_booking_rejects_too_many_guests(self):
+        """
+        Проверяет, что нельзя забронировать столик
+        для слишком большого числа гостей.
+        """
         booking_data = self.booking_data.copy()
         booking_data["guests"] = 5
 
@@ -71,8 +52,8 @@ class BookingModelTest(TestCase):
         with self.assertRaises(ValidationError):
             booking.full_clean()
 
-    # Проверяем, что неактивный столик нельзя забронировать.
     def test_booking_rejects_inactive_table(self):
+        """Проверяет, что неактивный столик нельзя забронировать."""
         self.table.is_active = False
         self.table.save()
 
@@ -81,9 +62,11 @@ class BookingModelTest(TestCase):
         with self.assertRaises(ValidationError):
             booking.full_clean()
 
-    # Проверяем, что нельзя создать два активных бронирования
-    # одного столика на одну дату и время.
     def test_cannot_create_duplicate_active_booking(self):
+        """
+        Проверяет, что нельзя создать два активных бронирования
+        одного столика на одну дату и время.
+        """
         Booking.objects.create(**self.booking_data)
 
         duplicate_booking = Booking(**self.booking_data)
@@ -91,9 +74,8 @@ class BookingModelTest(TestCase):
         with self.assertRaises(ValidationError):
             duplicate_booking.full_clean()
 
-    # Проверяем, что отменённое бронирование не блокирует столик
-    # и на это же время можно создать новое бронирование.
     def test_cancelled_booking_does_not_block_table(self):
+        """Проверяет, что отменённое бронирование не блокирует столик."""
         Booking.objects.create(
             **self.booking_data,
             status="cancelled",
@@ -106,9 +88,11 @@ class BookingModelTest(TestCase):
 
         self.assertEqual(Booking.objects.count(), 2)
 
-    # Проверяем, что ограничение UniqueConstraint на уровне базы данных
-    # предотвращает создание дублирующего активного бронирования.
     def test_database_prevents_duplicate_active_booking(self):
+        """
+        Проверяет, что ограничение базы данных предотвращает
+        дублирование активных бронирований.
+        """
         Booking.objects.create(**self.booking_data)
 
         duplicate_booking = Booking(**self.booking_data)
@@ -142,9 +126,11 @@ class BookingPermissionsTest(TestCase):
             guests=2,
         )
 
-    # Проверяем, что пользователь не может отменить
-    # бронирование другого пользователя.
     def test_user_cannot_cancel_another_users_booking(self):
+        """
+        Проверяет, что пользователь не может отменить
+        чужое бронирование.
+        """
         self.client.force_login(self.user)
 
         url = reverse(
@@ -159,9 +145,11 @@ class BookingPermissionsTest(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(self.booking.status, "pending")
 
-    # Проверяем, что неавторизованный пользователь
-    # не может открыть страницу бронирования.
     def test_anonymous_user_cannot_create_booking(self):
+        """
+        Проверяет, что неавторизованный пользователь
+        не может открыть страницу бронирования.
+        """
         url = reverse("restaurant:booking")
 
         response = self.client.get(url)
@@ -169,9 +157,11 @@ class BookingPermissionsTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/users/login/", response.url)
 
-    # Проверяем, что авторизованный пользователь
-    # может открыть страницу бронирования.
     def test_authenticated_user_can_open_booking_page(self):
+        """
+        Проверяет, что авторизованный пользователь
+        может открыть страницу бронирования.
+        """
         self.client.force_login(self.user)
 
         url = reverse("restaurant:booking")
@@ -180,9 +170,11 @@ class BookingPermissionsTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    # Проверяем, что авторизованный пользователь
-    # может создать бронирование через форму.
     def test_authenticated_user_can_create_booking(self):
+        """
+        Проверяет, что авторизованный пользователь
+        может создать бронирование через форму.
+        """
         self.client.force_login(self.user)
 
         url = reverse("restaurant:booking")
@@ -208,9 +200,11 @@ class BookingPermissionsTest(TestCase):
             ).exists()
         )
 
-    # Проверяем, что бронирование отклоняется,
-    # если нет свободного столика подходящего размера.
     def test_booking_rejected_when_no_suitable_table(self):
+        """
+        Проверяет, что бронирование отклоняется при отсутствии
+        подходящего свободного столика.
+        """
         self.client.force_login(self.user)
 
         url = reverse("restaurant:booking")
@@ -238,9 +232,8 @@ class BookingPermissionsTest(TestCase):
             ).exists()
         )
 
-    # Проверяем, что нельзя создать бронирование
-    # на прошедшую дату.
     def test_booking_rejected_for_past_date(self):
+        """Проверяет, что нельзя создать бронирование на прошедшую дату."""
         self.client.force_login(self.user)
 
         url = reverse("restaurant:booking")

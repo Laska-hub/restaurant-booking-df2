@@ -3,13 +3,17 @@ from datetime import date, time
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Table
-
-# дата + время + гости → форма проверяет наличие →
-# view выбирает подходящий столик → создаёт или изменяет Booking.
+from .services import get_available_table
 
 
 class BookingForm(forms.Form):
+    """
+    Форма для создания и редактирования бронирования столика.
+
+    Пользователь указывает дату, время, количество гостей
+    и необязательный комментарий.
+    """
+
     date = forms.DateField(
         label="Дата",
         widget=forms.DateInput(
@@ -56,6 +60,13 @@ class BookingForm(forms.Form):
     )
 
     def __init__(self, *args, booking=None, **kwargs):
+        """
+        Инициализирует форму и создаёт список доступного времени.
+
+        Параметр booking передаётся при редактировании существующего
+        бронирования, чтобы текущий столик учитывался при проверке
+        доступности.
+        """
         super().__init__(*args, **kwargs)
 
         self.booking = booking
@@ -70,6 +81,9 @@ class BookingForm(forms.Form):
         ]
 
     def clean_date(self):
+        """
+        Проверяет, что дата бронирования не находится в прошлом.
+        """
         booking_date = self.cleaned_data["date"]
 
         if booking_date < date.today():
@@ -78,6 +92,12 @@ class BookingForm(forms.Form):
         return booking_date
 
     def clean(self):
+        """
+        Проверяет наличие свободного столика для выбранных параметров.
+
+        Использует общую функцию get_available_table(), чтобы логика
+        поиска свободного столика не дублировалась в форме и views.
+        """
         cleaned_data = super().clean()
 
         booking_date = cleaned_data.get("date")
@@ -89,23 +109,14 @@ class BookingForm(forms.Form):
 
         booking_time = time.fromisoformat(booking_time)
 
-        available_tables = Table.objects.filter(
-            is_active=True,
-            seats__gte=guests,
-        ).exclude(
-            bookings__date=booking_date,
-            bookings__time=booking_time,
-            bookings__status__in=["pending", "confirmed"],
+        available_table = get_available_table(
+            booking_date,
+            booking_time,
+            guests,
+            booking=self.booking,
         )
 
-        if self.booking:
-            available_tables = available_tables | Table.objects.filter(
-                id=self.booking.table_id,
-                is_active=True,
-                seats__gte=guests,
-            )
-
-        if not available_tables.exists():
+        if not available_table:
             raise ValidationError(
                 "На выбранные дату и время нет свободного столика "
                 "подходящего размера."
@@ -115,6 +126,10 @@ class BookingForm(forms.Form):
 
 
 class FeedbackForm(forms.Form):
+    """
+    Форма обратной связи с посетителем ресторана.
+    """
+
     name = forms.CharField(
         label="Имя",
         max_length=100,
