@@ -1,0 +1,210 @@
+/* =========================
+   Атмосфера — фирменный стиль
+   ========================= */
+
+/* Основные цвета сайта */
+:root {
+    --color-dark: #3b2f2a;
+    --color-brown: #6f5547;
+    --color-accent: #b89b72;
+    --color-cream: #f7f3ed;
+    --color-white: #ffffff;
+    --color-text: #3f3a36;
+}
+
+
+/* Общие стили */
+body {
+    background-color: var(--color-cream) !important;
+    color: var(--color-text);
+    font-family: "Montserrat", sans-serif;
+}
+
+
+/* Заголовки */
+h1,
+h2,
+h3 {
+    color: var(--color-dark);
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+}
+
+
+/* Навигация */
+.navbar {
+    background-color: var(--color-dark) !important;
+}
+
+
+/* Название ресторана */
+.navbar .navbar-brand {
+    font-family: "Playfair Display", serif !important;
+    font-size: 3.1rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+
+/* Пункты навигации */
+.navbar .nav-link {
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.navbar .nav-link:hover {
+    color: var(--color-accent) !important;
+}
+
+
+/* Основные кнопки */
+.btn-primary {
+    background-color: var(--color-brown);
+    border-color: var(--color-brown);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-dark);
+    border-color: var(--color-dark);
+}
+
+
+/* Второстепенные кнопки */
+.btn-outline-secondary {
+    color: var(--color-brown);
+    border-color: var(--color-brown);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--color-brown);
+    border-color: var(--color-brown);
+}
+
+
+/* Карточки */
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.card.shadow-sm {
+    box-shadow: 0 4px 16px rgba(59, 47, 42, 0.08) !important;
+}
+
+
+/* Ссылки */
+a {
+    color: var(--color-brown);
+}
+
+a:hover {
+    color: var(--color-dark);
+}
+
+
+/* Футер */
+footer {
+    background-color: var(--color-dark) !important;
+}
+
+
+/* Два уровня навигации */
+@media (min-width: 992px) {
+    .navbar-collapse {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar-collapse .nav-center {
+        grid-column: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar-collapse .main-nav,
+    .navbar-collapse .user-nav {
+        display: flex !important;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 28px;
+        white-space: nowrap;
+    }
+
+    .navbar-collapse .user-nav {
+        margin-top: 2px;
+    }
+}
+
+
+/* Главный экран */
+.hero-row {
+    display: flex !important;
+    flex-direction: row;
+    width: 100%;
+    min-height: 600px;
+    align-items: center;
+}
+
+.hero-photo {
+    flex: 0 0 34%;
+    max-width: 34%;
+    height: 600px;
+}
+
+.hero-content {
+    flex: 0 0 66%;
+    max-width: 66%;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 80px 60px 140px;
+    box-sizing: border-box;
+    background-color: var(--color-cream);
+}
+
+.hero-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Телефон */
+@media (max-width: 767px) {
+    .hero-row {
+        flex-direction: column;
+    }
+
+.hero-photo {
+    flex: 0 0 25%;
+    max-width: 25%;
+    height: 600px;
+}
+
+.hero-content {
+    flex: 0 0 75%;
+    max-width: 75%;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 80px 60px 140px;
+    box-sizing: border-box;
+    background-color: var(--color-cream);
+    }
+}
+

@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}Меню{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-md-5">
+
+                    <h1 class="mb-4 text-center">
+                        Меню
+                    </h1>
+
+                    <p class="lead text-center mb-5">
+                        Наши блюда и напитки
+                    </p>
+
+                    <!-- Изображение меню из админки -->
+                    {% for image in images %}
+                        <div class="text-center mb-5">
+                            <img
+                                src="{{ image.image.url }}"
+                                alt="{{ image.name }}"
+                                class="img-fluid rounded"
+                            >
+                        </div>
+                    {% endfor %}
+
+
+                    <!-- ЛИСТ 1 -->
+                    <div class="menu-page">
+
+                        <h2 class="h3 text-center mb-4">
+                            Основные блюда
+                        </h2>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Стейк с овощами
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    1 290 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Сочный стейк с сезонными овощами
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Паста с грибами
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    690 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Паста с шампиньонами в сливочном соусе
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Рыба с овощами
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    890 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Запечённая рыба с гарниром из сезонных овощей
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Куриное филе с картофелем
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    790 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Нежное куриное филе с запечённым картофелем
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Ризотто с овощами
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    720 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-0">
+                                Рис арборио с сезонными овощами и пармезаном
+                            </p>
+                        </div>
+
+
+                        <hr class="my-5">
+
+
+                        <h2 class="h3 text-center mb-4">
+                            Закуски
+                        </h2>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Брускетта с томатами
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    390 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Хрустящий хлеб с томатами, зеленью и оливковым маслом
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Сырная тарелка
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    850 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Ассорти сыров с орехами и виноградом
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Овощная тарелка
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    490 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-0">
+                                Свежие сезонные овощи с зеленью
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- ЛИСТ 2 -->
+                    <div class="menu-page mt-5 pt-5">
+
+                        <h2 class="h3 text-center mb-4">
+                            Десерты
+                        </h2>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Чизкейк
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    450 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Нежный сливочный чизкейк
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Шоколадный десерт
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    420 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Шоколадный десерт с ягодами
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Тирамису
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    480 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-3">
+                                Классический итальянский десерт с кофе и маскарпоне
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <span class="fw-semibold">
+                                    Панна-котта
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    430 ₽
+                                </strong>
+                            </div>
+                            <p class="text-muted mb-0">
+                                Нежный сливочный десерт с ягодным соусом
+                            </p>
+                        </div>
+
+
+                        <hr class="my-5">
+
+
+                        <h2 class="h3 text-center mb-4">
+                            Напитки
+                        </h2>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="fw-semibold">
+                                    Кофе
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    250 ₽
+                                </strong>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="fw-semibold">
+                                    Чай
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    220 ₽
+                                </strong>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="fw-semibold">
+                                    Лимонад
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    320 ₽
+                                </strong>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="fw-semibold">
+                                    Морс ягодный
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    280 ₽
+                                </strong>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold">
+                                    Минеральная вода
+                                </span>
+                                <strong class="ms-3 text-nowrap">
+                                    180 ₽
+                                </strong>
+                            </div>
+                        </div>
+
+
+                        <hr class="my-5">
+
+
+                        <div class="text-center">
+                            <p class="mb-1">
+                                Приятного аппетита!
+                            </p>
+                            <p class="text-muted small mb-0">
+                                Меню и цены могут изменяться
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
